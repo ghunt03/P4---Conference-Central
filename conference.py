@@ -273,7 +273,7 @@ class ConferenceApi(remote.Service):
                       http_method='POST', name='createConference')
     def createConference(self, request):
         """Create new conference."""
-        return self._createConferenceObject(request)
+        return self._createConferenceObject(self, request)
 
     @endpoints.method(message_types.VoidMessage, ConferenceForms,
                       path='getConferencesCreated',
@@ -524,7 +524,7 @@ class ConferenceApi(remote.Service):
                         str(getattr(sess, field.name)))
                 else:
                     setattr(session, field.name, getattr(sess, field.name))
-            elif field.name == "websafeKey":
+            elif field.name == "websafeSessionKey":
                 setattr(session, field.name, sess.key.urlsafe())
         if conferenceName:
             setattr(session, 'conferenceName', conferenceName)
@@ -574,7 +574,7 @@ class ConferenceApi(remote.Service):
         session = Session(**data)
         session.put()
 
-        # send confirmation email
+        # set featured speaker
         taskqueue.add(params={'speakerKey': request.speakerKey,
                               'conferenceKey': request.websafeConferenceKey},
                       url='/tasks/set_featured_speaker'
@@ -593,10 +593,9 @@ class ConferenceApi(remote.Service):
         conferenceName = confKey.get().name
         return SessionForms(
             items=[self._copySessionToForm(
-                sess,
-                conferenceName,
-                ndb.Key(urlsafe=sess.speakerKey).get().speaker_name
-            )
+                sess, 
+                conferenceName, 
+                ndb.Key(urlsafe=sess.speakerKey).get().speaker_name)
                    for sess in sessions]
         )
 
@@ -664,10 +663,11 @@ class ConferenceApi(remote.Service):
         prof = self._getProfileFromUser()
         sessionKey = request.sessionKey
         session = ndb.Key(urlsafe=sessionKey).get()
-        if not session:
-            raise endpoints.NotFoundException(
-                'No session found with key: %s' % sessionKey)
+        
         if add:
+            if not session:
+                raise endpoints.NotFoundException(
+                    'No session found with key: %s' % sessionKey)
             # check if session is already in wishlist
             if sessionKey in prof.sessionWishlist:
                 raise ConflictException(
