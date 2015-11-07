@@ -139,6 +139,7 @@ class SessionForm(messages.Message):
     conferenceName = messages.StringField(9)
     speakerKey = messages.StringField(10)
     speakerName = messages.StringField(11)
+    websafeSessionKey = messages.StringField(12)
 
 
 class SessionForms(messages.Message):
@@ -161,6 +162,7 @@ class SpeakerForm(messages.Message):
     speaker_name = messages.StringField(1)
     speaker_bio = messages.StringField(2)
     speaker_email = messages.StringField(3)
+    websafeKey = messages.StringField(4)
 
 
 class SpeakerForms(messages.Message):
