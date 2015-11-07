@@ -39,9 +39,9 @@ This project is utilising the Google App Engine and Datastore to develop a backe
 3. Update the CLIENT_ID in the oauth2 settings in \static\js\app.js (line 93)
 4. Open the Google App Engine Launcher
 5. Click Deploy
-6. Open your web browser and navigate to https://{{PROJECT_ID}}striking-center-104307.appspot.com/ (replacing {{PROJECT_ID}}, with the ID for the project created in the Google Developer Console)
+6. Open your web browser and navigate to https://{{PROJECT_ID}}.appspot.com/ (replacing {{PROJECT_ID}}, with the ID for the project created in the Google Developer Console)
 
-### Viewing the a currently deployed version
+### Viewing the currently deployed version
 The current deployed version can be viewed at https://striking-center-104307.appspot.com/ and the API's viewed at https://striking-center-104307.appspot.com/_ah/api/explorer
 
 
@@ -52,6 +52,23 @@ The API's for the assignment can be viewed at   https://striking-center-104307.a
 
 ###Task 1 - Add Sessions to conferences
 For this task created 2 new tables Speakers (to store details about the speaker, such as name, email and bio) and Sessions (to store details about a session which is linked to a conference). The sessions table can be queried by the conference, speaker and type of session. A Session record is linked to Conference record and a Speaker is linked to the session through the session key. 
+
+The Speakers table is made up of the following fields:
+
+- speaker_name - string field which is mandatory for storing the speakers name
+- speaker_email - string field for storing the speakers email address. The storing of the speaker's email address could allow the app to be extended further through a task or scheduled job to send the speaker a list of people attending their sessions
+- speaker_bio - text field, which is used for storing a brief bio for a speaker. This could be used for the featured speaker function and also providing some details about a speaker to help attendees determine which sessions they would like to attend
+
+The Sessions table is made up of the following fields:
+
+- session_name - string field containing the name for the session
+- highlights - string field for brief description of session
+- duration - integer field, used for storing the number of minutes that a session runs for
+- typeOfSession - string field, used for storing the type of session for example workshop, keynote, lecture
+- startDate - date field, used for storing the date that the session starts
+- startTime - time field, used for storing the time that the session starts
+- speakerKey - string field, used for storing the key field of the speaker for the session
+
 
 ###Task 2 - Add Sessions to User Wish List
 This task involved allowing the user to register / unregister their interest in each session. 
